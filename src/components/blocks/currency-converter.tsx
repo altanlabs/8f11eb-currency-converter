@@ -12,9 +12,6 @@ const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState('EUR');
   const [result, setResult] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [targetNumber, setTargetNumber] = useState(50);
-  const [gameMessage, setGameMessage] = useState('');
-  const [showCelebration, setShowCelebration] = useState(false);
 
   const popularCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'INR'];
   
@@ -48,22 +45,10 @@ const CurrencyConverter = () => {
       
       const newAmount = Math.abs(Math.round(x.get()));
       setAmount(newAmount);
-      
-      if (newAmount === targetNumber) {
-        setIsPlaying(false);
-        setShowCelebration(true);
-        setGameMessage("🎉 Perfect! You got it!");
-        clearInterval(interval);
-        
-        setTimeout(() => {
-          setShowCelebration(false);
-          setTargetNumber(Math.floor(Math.random() * 100));
-        }, 2000);
-      }
     }, 16);
     
     return () => clearInterval(interval);
-  }, [isPlaying, targetNumber]);
+  }, [isPlaying]);
 
   useEffect(() => {
     const fetchRates = async () => {
@@ -89,33 +74,19 @@ const CurrencyConverter = () => {
 
   const handleStartGame = () => {
     setIsPlaying(true);
-    setGameMessage(`Try to hit ${targetNumber}!`);
     speedRef.current = 0;
     bounceRef.current = 0;
   };
 
   const handleStopGame = () => {
     setIsPlaying(false);
-    const difference = Math.abs(amount - targetNumber);
-    setGameMessage(`You were off by ${difference}! Try again!`);
   };
 
   return (
     <Card className="w-full max-w-md mx-auto p-6 space-y-6 relative overflow-hidden">
-      {showCelebration && (
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-red-500/20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        />
-      )}
-      
       <div className="space-y-4">
-        <div className="text-center space-y-2">
-          <div className="text-sm font-medium text-muted-foreground">Target: {targetNumber}</div>
-          <div className="text-4xl font-bold">{amount}</div>
-          <div className="text-sm text-muted-foreground">{gameMessage}</div>
+        <div className="text-center">
+          <div className="text-4xl font-bold mb-2">{amount}</div>
         </div>
 
         <div className="relative h-8 bg-secondary rounded-full overflow-hidden">
