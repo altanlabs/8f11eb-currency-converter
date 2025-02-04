@@ -7,11 +7,12 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 import { ArrowLeftRight } from 'lucide-react';
 
 const CurrencyConverter = () => {
-  const [amount, setAmount] = useState<number>(1);
+  const [amount, setAmount] = useState<number>(0);
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('EUR');
   const [result, setResult] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState<'slow' | 'medium' | 'fast'>('slow');
 
   const popularCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'INR'];
   
@@ -22,17 +23,35 @@ const CurrencyConverter = () => {
   const bounceRef = useRef<number>(0);
   const lastDirectionRef = useRef<number>(1);
   const speedRef = useRef<number>(0);
+  const baseSpeedRef = useRef<number>(1);
 
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
   };
 
+  const getSpeedMultiplier = () => {
+    switch (speed) {
+      case 'slow': return 1;
+      case 'medium': return 100;
+      case 'fast': return 10000;
+      default: return 1;
+    }
+  };
+
+  const formatAmount = (num: number) => {
+    if (num >= 1000000) {
+      return num.toLocaleString('en-US');
+    }
+    return num.toString();
+  };
+
   useEffect(() => {
     if (!isPlaying) return;
 
     const interval = setInterval(() => {
-      speedRef.current += lastDirectionRef.current * 0.5;
+      const multiplier = getSpeedMultiplier();
+      speedRef.current += lastDirectionRef.current * (0.5 * baseSpeedRef.current);
       bounceRef.current += Math.random() * 2 - 1;
       bounceRef.current *= 0.95;
       x.set(x.get() + speedRef.current + bounceRef.current);
@@ -41,14 +60,15 @@ const CurrencyConverter = () => {
         lastDirectionRef.current *= -1;
         speedRef.current = 0;
         if (Math.random() > 0.7) lastDirectionRef.current *= -1;
+        baseSpeedRef.current = Math.min(baseSpeedRef.current + 0.2, 5);
       }
       
-      const newAmount = Math.abs(Math.round(x.get()));
-      setAmount(newAmount);
+      const newAmount = Math.abs(Math.round(x.get() * multiplier));
+      setAmount(Math.min(newAmount, 1000000));
     }, 16);
     
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, speed]);
 
   useEffect(() => {
     const fetchRates = async () => {
@@ -67,7 +87,7 @@ const CurrencyConverter = () => {
       }
     };
 
-    if (amount && fromCurrency && toCurrency) {
+    if (fromCurrency && toCurrency) {
       fetchRates();
     }
   }, [amount, fromCurrency, toCurrency]);
@@ -76,17 +96,28 @@ const CurrencyConverter = () => {
     setIsPlaying(true);
     speedRef.current = 0;
     bounceRef.current = 0;
+    baseSpeedRef.current = 1;
   };
 
   const handleStopGame = () => {
     setIsPlaying(false);
   };
 
+  const cycleSpeed = () => {
+    const speeds: Array<'slow' | 'medium' | 'fast'> = ['slow', 'medium', 'fast'];
+    const currentIndex = speeds.indexOf(speed);
+    const nextIndex = (currentIndex + 1) % speeds.length;
+    setSpeed(speeds[nextIndex]);
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto p-6 space-y-6 relative overflow-hidden">
       <div className="space-y-4">
         <div className="text-center">
-          <div className="text-4xl font-bold mb-2">{amount}</div>
+          <div className="text-4xl font-bold mb-2">{formatAmount(amount)}</div>
+          <div className="text-sm text-muted-foreground">
+            Speed: {speed.charAt(0).toUpperCase() + speed.slice(1)}
+          </div>
         </div>
 
         <div className="relative h-8 bg-secondary rounded-full overflow-hidden">
@@ -103,6 +134,14 @@ const CurrencyConverter = () => {
             className="w-32"
           >
             {isPlaying ? "Stop" : "Start"}
+          </Button>
+          <Button
+            onClick={cycleSpeed}
+            variant="outline"
+            className="w-32"
+            disabled={isPlaying}
+          >
+            Change Speed
           </Button>
         </div>
         
@@ -155,7 +194,10 @@ const CurrencyConverter = () => {
       {result !== null && (
         <div className="text-center space-y-2">
           <div className="text-3xl font-light">
-            {result.toFixed(2)} {toCurrency}
+            {result.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })} {toCurrency}
           </div>
           <div className="text-sm text-muted-foreground">
             1 {fromCurrency} = {(result / amount).toFixed(4)} {toCurrency}
