@@ -1,37 +1,19 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-
+import CurrencyConverter from '@/components/blocks/currency-converter';
 
 export default function IndexPage() {
-  const navigate = useNavigate()
-
   return (
-    <div className="container mx-auto px-4 py-16 space-y-32">
-      {/* Hero Section */}
-      <motion.section 
-        className="text-center space-y-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Badge variant="secondary" className="mb-4">
-          Welcome to Your New App
-        </Badge>
-        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-          Build Beautiful Interfaces
-          <br />
-          With Altan AI
-        </h1>
-        <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-          Start chatting to edit this app.
-        </p>
-        <Button size="lg" className="mt-4" onClick={() => navigate('/')}>
-          Cool button <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </motion.section>
+    <div className="min-h-screen flex flex-col items-center px-4 py-16 bg-background">
+      <h1 className="text-4xl md:text-6xl font-bold mb-12 text-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+        Currency Converter
+      </h1>
+      
+      <div className="w-full max-w-md">
+        <CurrencyConverter />
+      </div>
+      
+      <p className="mt-8 text-sm text-muted-foreground text-center">
+        Real-time exchange rates powered by Exchange Rate API
+      </p>
     </div>
-  )
+  );
 }
