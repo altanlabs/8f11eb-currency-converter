@@ -14,7 +14,7 @@ const CurrencyConverter = () => {
 
   const popularCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'INR'];
   
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<number | null>(null);
 
   const handleSwapCurrencies = () => {
     setFromCurrency(toCurrency);
@@ -27,17 +27,17 @@ const CurrencyConverter = () => {
 
   useEffect(() => {
     if (isPlaying) {
-      intervalRef.current = setInterval(() => {
+      intervalRef.current = window.setInterval(() => {
         const newAmount = Math.floor(Math.random() * 1000000) + 1;
         setAmount(newAmount);
       }, 50); // Update every 50ms for fast changes
     } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+      window.clearInterval(intervalRef.current);
     }
 
     return () => {
       if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+        window.clearInterval(intervalRef.current);
       }
     };
   }, [isPlaying]);
