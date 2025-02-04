@@ -93,7 +93,7 @@ const CurrencyConverter = () => {
 
   const handleStartGame = () => {
     setIsPlaying(true);
-    setGameMessage(\`Try to hit ${targetNumber}!\`);
+    setGameMessage(`Try to hit ${targetNumber}!`);
     speedRef.current = 0;
     bounceRef.current = 0;
   };
@@ -101,7 +101,7 @@ const CurrencyConverter = () => {
   const handleStopGame = () => {
     setIsPlaying(false);
     const difference = Math.abs(amount - targetNumber);
-    setGameMessage(\`You were off by ${difference}! Try again!\`);
+    setGameMessage(`You were off by ${difference}! Try again!`);
   };
 
   return (
