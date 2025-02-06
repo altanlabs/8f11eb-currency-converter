@@ -1,3 +1,5 @@
+import CurrencyConverter from '@/components/blocks/currency-converter';
+
 export default function IndexPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-[#000000]">
