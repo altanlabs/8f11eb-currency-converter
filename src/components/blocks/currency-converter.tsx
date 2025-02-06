@@ -30,7 +30,7 @@ const CurrencyConverter = () => {
       intervalRef.current = window.setInterval(() => {
         const newAmount = Math.floor(Math.random() * 1000000) + 1;
         setAmount(newAmount);
-      }, 50); // Update every 50ms for fast changes
+      }, 50);
     } else if (intervalRef.current) {
       window.clearInterval(intervalRef.current);
     }
@@ -73,32 +73,42 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto p-6 space-y-6 relative overflow-hidden">
-      <div className="space-y-4">
-        <div className="text-center">
-          <div className="text-4xl font-bold mb-6">{formatAmount(amount)}</div>
+    <div className="min-h-[500px] w-full max-w-2xl mx-auto p-8 bg-[#000000] text-white rounded-3xl shadow-2xl">
+      <div className="space-y-8">
+        {/* Amount Display */}
+        <div className="text-center relative">
+          <div className="text-7xl font-bold font-mono tracking-wider mb-2 
+                        bg-gradient-to-r from-[#7C7C7C] to-[#D64933] 
+                        bg-clip-text text-transparent
+                        transition-all duration-200">
+            {formatAmount(amount)}
+          </div>
         </div>
 
-        <div className="flex gap-2 justify-center">
+        {/* Control Button */}
+        <div className="flex justify-center">
           <Button
             onClick={isPlaying ? handleStopGame : handleStartGame}
-            variant={isPlaying ? "destructive" : "default"}
-            className="w-32"
+            className={`w-40 h-14 text-lg font-medium rounded-full transition-all duration-300
+                      ${isPlaying 
+                        ? 'bg-[#D64933] hover:bg-[#D64933]/90 text-white' 
+                        : 'bg-[#7C7C7C] hover:bg-[#7C7C7C]/90 text-white'}`}
           >
-            {isPlaying ? "Stop" : "Start"}
+            {isPlaying ? "STOP" : "START"}
           </Button>
         </div>
         
-        <div className="grid grid-cols-5 gap-4 mt-6 items-end">
-          <div className="col-span-2 space-y-2">
-            <label className="text-sm text-muted-foreground">From</label>
+        {/* Currency Selectors */}
+        <div className="grid grid-cols-7 gap-4 items-center mt-8">
+          <div className="col-span-3">
             <Select value={fromCurrency} onValueChange={setFromCurrency}>
-              <SelectTrigger>
-                <SelectValue placeholder="From Currency" />
+              <SelectTrigger className="h-14 bg-[#7C7C7C]/20 border-0 text-white">
+                <SelectValue placeholder="From" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#000000] border-[#7C7C7C]">
                 {popularCurrencies.map((currency) => (
-                  <SelectItem key={currency} value={currency}>
+                  <SelectItem key={currency} value={currency}
+                            className="text-white hover:bg-[#7C7C7C]/20">
                     {currency}
                   </SelectItem>
                 ))}
@@ -106,26 +116,26 @@ const CurrencyConverter = () => {
             </Select>
           </div>
 
-          <div className="flex justify-center items-end h-[42px]">
+          <div className="flex justify-center">
             <Button
               variant="ghost"
               size="icon"
               onClick={handleSwapCurrencies}
-              className="h-[42px]"
+              className="w-14 h-14 rounded-full bg-[#7C7C7C]/20 hover:bg-[#7C7C7C]/30"
             >
-              <ArrowLeftRight className="h-4 w-4" />
+              <ArrowLeftRight className="h-6 w-6 text-[#D64933]" />
             </Button>
           </div>
           
-          <div className="col-span-2 space-y-2">
-            <label className="text-sm text-muted-foreground">To</label>
+          <div className="col-span-3">
             <Select value={toCurrency} onValueChange={setToCurrency}>
-              <SelectTrigger>
-                <SelectValue placeholder="To Currency" />
+              <SelectTrigger className="h-14 bg-[#7C7C7C]/20 border-0 text-white">
+                <SelectValue placeholder="To" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#000000] border-[#7C7C7C]">
                 {popularCurrencies.map((currency) => (
-                  <SelectItem key={currency} value={currency}>
+                  <SelectItem key={currency} value={currency}
+                            className="text-white hover:bg-[#7C7C7C]/20">
                     {currency}
                   </SelectItem>
                 ))}
@@ -133,22 +143,23 @@ const CurrencyConverter = () => {
             </Select>
           </div>
         </div>
-      </div>
 
-      {result !== null && (
-        <div className="text-center space-y-2">
-          <div className="text-3xl font-light">
-            {result.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            })} {toCurrency}
+        {/* Conversion Result */}
+        {result !== null && (
+          <div className="text-center space-y-2 mt-8 py-6 border-t border-[#7C7C7C]/20">
+            <div className="text-4xl font-light text-[#D64933]">
+              {result.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })} {toCurrency}
+            </div>
+            <div className="text-sm text-[#7C7C7C]">
+              1 {fromCurrency} = {(result / amount).toFixed(4)} {toCurrency}
+            </div>
           </div>
-          <div className="text-sm text-muted-foreground">
-            1 {fromCurrency} = {(result / amount).toFixed(4)} {toCurrency}
-          </div>
-        </div>
-      )}
-    </Card>
+        )}
+      </div>
+    </div>
   );
 };
 
