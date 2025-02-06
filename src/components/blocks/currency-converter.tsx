@@ -73,12 +73,12 @@ const CurrencyConverter = () => {
   };
 
   return (
-    <div className="min-h-[500px] w-full max-w-2xl mx-auto p-8 bg-[#000000] text-white rounded-3xl shadow-2xl">
+    <div className="min-h-[500px] w-full max-w-2xl mx-auto p-8 bg-[#000000] border border-[#7C7C7C]/20 text-white rounded-3xl shadow-2xl">
       <div className="space-y-8">
         {/* Amount Display */}
         <div className="text-center relative">
           <div className="text-7xl font-bold font-mono tracking-wider mb-2 
-                        bg-gradient-to-r from-[#7C7C7C] to-[#D64933] 
+                        bg-gradient-to-r from-[#7C7C7C] via-[#7C7C7C] to-[#D64933] 
                         bg-clip-text text-transparent
                         transition-all duration-200">
             {formatAmount(amount)}
@@ -102,13 +102,13 @@ const CurrencyConverter = () => {
         <div className="grid grid-cols-7 gap-4 items-center mt-8">
           <div className="col-span-3">
             <Select value={fromCurrency} onValueChange={setFromCurrency}>
-              <SelectTrigger className="h-14 bg-[#7C7C7C]/20 border-0 text-white">
+              <SelectTrigger className="h-14 bg-[#7C7C7C]/10 border-[#7C7C7C]/20 text-white">
                 <SelectValue placeholder="From" />
               </SelectTrigger>
-              <SelectContent className="bg-[#000000] border-[#7C7C7C]">
+              <SelectContent className="bg-[#000000] border-[#7C7C7C]/20">
                 {popularCurrencies.map((currency) => (
                   <SelectItem key={currency} value={currency}
-                            className="text-white hover:bg-[#7C7C7C]/20">
+                            className="text-white hover:bg-[#7C7C7C]/10">
                     {currency}
                   </SelectItem>
                 ))}
@@ -121,7 +121,7 @@ const CurrencyConverter = () => {
               variant="ghost"
               size="icon"
               onClick={handleSwapCurrencies}
-              className="w-14 h-14 rounded-full bg-[#7C7C7C]/20 hover:bg-[#7C7C7C]/30"
+              className="w-14 h-14 rounded-full bg-[#7C7C7C]/10 hover:bg-[#7C7C7C]/20 border border-[#7C7C7C]/20"
             >
               <ArrowLeftRight className="h-6 w-6 text-[#D64933]" />
             </Button>
@@ -129,13 +129,13 @@ const CurrencyConverter = () => {
           
           <div className="col-span-3">
             <Select value={toCurrency} onValueChange={setToCurrency}>
-              <SelectTrigger className="h-14 bg-[#7C7C7C]/20 border-0 text-white">
+              <SelectTrigger className="h-14 bg-[#7C7C7C]/10 border-[#7C7C7C]/20 text-white">
                 <SelectValue placeholder="To" />
               </SelectTrigger>
-              <SelectContent className="bg-[#000000] border-[#7C7C7C]">
+              <SelectContent className="bg-[#000000] border-[#7C7C7C]/20">
                 {popularCurrencies.map((currency) => (
                   <SelectItem key={currency} value={currency}
-                            className="text-white hover:bg-[#7C7C7C]/20">
+                            className="text-white hover:bg-[#7C7C7C]/10">
                     {currency}
                   </SelectItem>
                 ))}
